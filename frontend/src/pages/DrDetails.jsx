@@ -1,13 +1,35 @@
 // React Component JSX
-import React from "react";
+import React, { useEffect, useState } from "react";
+import {useParams} from 'react-router-dom'
+import axios from "axios";
 import "../styles/DrDetails.css"; // Make sure to create this CSS file
 
 const DrDetails = () => {
+  const [dr,setDr]=useState([])
+  const {drId}=useParams();
+  console.log(drId)
+
+  const searchDr=async()=>{
+    const _id=drId.split(":")[1]
+    const dr=await axios.post("http://localhost:8000/api/dr/get",{
+      _id
+    })
+
+    console.log(dr.data);
+    setDr(dr.data)
+  }
+
+  useEffect(()=>{
+    searchDr();
+  },[])
+
+
+
   return (
     <div id="doctor-profile-container">
       <div id="profile-section">
         <div id="doctor-info">
-          <ProfileCard />
+          <ProfileCard dr={dr} />
         </div>
 
         {/* <div className="clinic-info">
@@ -71,19 +93,19 @@ function AppointmentComponent() {
 
 
 
-const ProfileCard = () => {
+const ProfileCard = ({dr}) => {
   return (
     <div id="profile-card">
       <div id="img">
-        <img src="src/assets/demodr.jpg" alt="Profile" id="profile-image" />
+        <img src="https://tse4.mm.bing.net/th?id=OIP.Kmt2ZxosnmX9NIMeirkSLQHaIR&pid=Api&P=0&h=180" alt="Profile" id="profile-image" />
       </div>
 
       <div className="profile-header">
-        <h1>Dr. Dheeraj Setia </h1>
+        <h1>{dr && dr.name} </h1>
         <p>BDS, MDS - Conservative Dentistry & Endodontics,</p>
         <p>MDS - Implantologist, Cosmetic/Aesthetic Dentist</p>
         <p>
-          <strong>23+ years Experience Overall </strong>
+          <strong>{dr && dr.years_of_experience}+ years Experience Overall </strong>
         </p>
 
         <div className="profile-body">
@@ -92,7 +114,7 @@ const ProfileCard = () => {
             <div className="verified-checkmark">98% (293 ratings) Verified</div>
           </div>
           <p>
-            Dr Dheeraj Setia is a principal dentist at The Dental Roots Gurgaon
+            Dr {dr && dr.name} is a principal dentist at The Dental Roots Gurgaon
             providing patients with treatment involving all aspects of dentistry
             including Single Sitting Root Canal, more...
           </p>

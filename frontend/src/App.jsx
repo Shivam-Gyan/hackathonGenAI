@@ -3,10 +3,11 @@ import ApptBook from './pages/ApptBook'
 import DrDetails from './pages/DrDetails'
 import Home from './pages/Home'
 import Login from './pages/Login'
-import {Routes, Route} from 'react-router-dom'
+import {Routes, Route, Navigate} from 'react-router-dom'
 import SignUp from './pages/SignUp'
 import Layout from './components/Layout';
 import {ToastContainer} from 'react-toastify'
+import Doctor from './pages/Doctor'
 
 export default function App() {
   return (
@@ -17,9 +18,11 @@ export default function App() {
           <Route path="/" element={<Home />} />
           <Route path="/signup" element={<SignUp />} />
           <Route path="/login" element={<Login />} />
-          <Route path="/drdetails" element={<DrDetails />} />
+          <Route path="/drdetails/:drId" element={<DrDetails />} />
           <Route path="/apptbook" element={<ApptBook />} />
+          <Route path="/doctor" element={<Doctor />} />
         </Route>
       </Routes>
       </>
   )}
+

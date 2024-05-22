@@ -36,7 +36,7 @@ const Navbar = () => {
         </NavLink>
 
         {/* get all doctor */}
-        <NavLink to={'/login'}
+        <NavLink to={'/doctor'}
           className={({ isActive }) => (
             `text-md tracking-wider hover:text-blue-500 font-medium ${isActive ? "text-blue-700" : ""}`
           )}>

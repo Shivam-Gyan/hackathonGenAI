@@ -1,12 +1,18 @@
 import React, { useState } from 'react';
 import '../styles/Home.css'; // Make sure to name your CSS file accordingly
 import { IoSearch } from "react-icons/io5";
+import { Link } from 'react-router-dom';
+import axios from 'axios';
 
 function Home() {
   const [prompt,setPrompt]=useState("");
+  const [allDocs,setAllDocs]=useState([]);
 
-  const handleClick=()=>{
+  const handleClick=async()=>{
     console.log(prompt)
+    const user=await axios.post('http://localhost:8000/api/dr/',{prompt})
+    setAllDocs(user.data)
+    console.log(user.data)
   }
   return (
 
@@ -36,8 +42,12 @@ function Home() {
         </div>
 
         <div className='drs'>
-          <div className='drcards'><ProfileCard /></div>
-          <div className='drcards'><ProfileCard /></div>
+          {allDocs && allDocs.map((doc,index)=>(
+            <Link key={index} to={`/drdetails/:${doc._id}`} className='drcards'><ProfileCard doc={doc} /></Link>
+          )
+        )}
+          
+          {/* <Link to={'/drdetails/:drId'} className='drcards'><ProfileCard /></Link> */}
         </div>
       </main>
 
@@ -45,7 +55,7 @@ function Home() {
   );
 
 }
-const ProfileCard = () => {
+const ProfileCard = ({doc}) => {
   return (
     <div className="profile-card">
       <div className="w-20 h-20 mr-4 overflow-hidden rounded-full object-center">
@@ -53,18 +63,17 @@ const ProfileCard = () => {
       </div>
 
       <div className="info-section">
-        <h2 id="dr-name">Dr. Rahul's Dentalville</h2>
-        <p id="dr-experience">1 Dentist - 18 years experience</p>
-        <p id="dr-location">Thane West</p>
-        <p id="dr-fees">₹500 Consultation Fees</p>
+        <h2 id="dr-name">Name : {doc && doc.name}</h2>
+        <p id="dr-experience">Year of Experience : {doc && doc.years_of_experience}</p>
+        <p id="dr-location">Location : {doc && doc.location.city}</p>
+        <p id="dr-fees">consultation Fee :{doc && doc.consultation_fee}</p>
         <div className="rating-section">
-          <span>98%</span>
-          <span>791 Patient Stories</span>
+          <span>{526+Math.floor(Math.random()*800)} Patient Stories</span>
         </div>
       </div>
 
       <div className="booking-button-section">
-        <button>Book Appointment</button>
+        <div href={`/drdetails/:${doc._id}`} >Book Appointment</div>
       </div>
     </div>
   );
